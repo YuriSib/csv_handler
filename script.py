@@ -189,17 +189,6 @@ def parse_args():
             args = value.split('=')
             args_dict[method] = args
 
-
-    # if args_dict['where']:
-    #     where_args = re.match(r'(\w+)\s*([<>=])\s*(.+)', args_dict['where'])
-    #     args_dict['where'] = where_args.groups()
-    # if args_dict['aggregate']:
-    #     aggregate_args = args_dict['aggregate'].split('=')
-    #     args_dict['aggregate'] = aggregate_args
-    # if args_dict['order_by']:
-    #     aggregate_args = args_dict['order_by'].split('=')
-    #     args_dict['order_by'] = aggregate_args
-
     return args_dict
 
 

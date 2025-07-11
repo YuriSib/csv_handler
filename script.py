@@ -224,6 +224,9 @@ def main():
         else:
             result = methods[task]([data_table[0]] + result, *args)
 
+    if type(result) is str:
+        return result
+
     return tabulate(result, headers=list(types_fields.keys()), tablefmt="grid")
 
 

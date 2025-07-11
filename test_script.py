@@ -1,5 +1,5 @@
 import pytest
-from script import where, aggregate, parse_args, get_data_from_csv, order_by
+from script import where, aggregate, parse_args, get_data_from_csv, order_by, main
 from unittest.mock import patch
 import sys
 
@@ -19,6 +19,7 @@ table = [
     ('>', '800', [['iPhone 15', 'Apple', '999'], ['Galaxy S23', 'Samsung', '899']]),
     ('<', '900', [['Galaxy S23', 'Samsung', '899'], ['Pixel 8', 'Google', '799']]),
     ('=', '999', [['iPhone 15', 'Apple', '999']]),
+    ('=', '950.7', []),
     ('<', '800.5', [['Pixel 8', 'Google', '799']]),
 ])
 def test_where_valid_numeric_filtering(operator, value, expected):
@@ -122,3 +123,26 @@ def test_pa_invalid_data_2(run_with_args, input_, response):
 def test_order_by_invalid_data(field, agg_value, response):
     result = order_by(table, field, agg_value)
     assert result == response
+
+
+"""Тестирую mian"""
+
+
+@pytest.fixture
+def sample_csv(tmp_path):
+    file = tmp_path / "test.csv"
+    file.write_text("Name,Brand,Price\niPhone,Apple,999\nGalaxy,Samsung,899\ne398,Motorola,300")
+    return str(file)
+
+
+def test_main_where(sample_csv, capsys):
+    test_args = ['script.py', '--file', sample_csv, '--where', 'Price>800', '--order_by', 'Price=asc']
+    with patch.object(sys, 'argv', test_args):
+        result = main()
+        assert result == ('+--------+---------+---------+\n'
+                          '| Name   | Brand   |   Price |\n'
+                          '+========+=========+=========+\n'
+                          '| iPhone | Apple   |     999 |\n'
+                          '+--------+---------+---------+\n'
+                          '| Galaxy | Samsung |     899 |\n'
+                          '+--------+---------+---------+')

@@ -167,7 +167,7 @@ def parse_args():
                 if val.count("<") != 1 and val.count(">") != 1:
                     return f"Не корректное значение. {val}"
         else:
-            if val not in ["--where", "--aggregate"]:
+            if val not in ["--where", '--order_by', "--aggregate"]:
                 return f"Не корректный флаг. {val}"
 
     parser = argparse.ArgumentParser(description="Обработчик csv файлов")
@@ -180,12 +180,25 @@ def parse_args():
 
     args_dict = vars(args)
 
-    if args_dict['where']:
-        where_args = re.match(r'(\w+)\s*([<>=])\s*(.+)', args_dict['where'])
-        args_dict['where'] = where_args.groups()
-    if args_dict['aggregate']:
-        aggregate_args = args_dict['aggregate'].split('=')
-        args_dict['aggregate'] = aggregate_args
+    for method, value in args_dict.items():
+        if method == 'where' and value:
+            where_args = re.match(r'(\w+)\s*([<>=])\s*(.+)', value)
+            args_dict['where'] = where_args.groups()
+            continue
+        if method != 'file' and value:
+            args = value.split('=')
+            args_dict[method] = args
+
+
+    # if args_dict['where']:
+    #     where_args = re.match(r'(\w+)\s*([<>=])\s*(.+)', args_dict['where'])
+    #     args_dict['where'] = where_args.groups()
+    # if args_dict['aggregate']:
+    #     aggregate_args = args_dict['aggregate'].split('=')
+    #     args_dict['aggregate'] = aggregate_args
+    # if args_dict['order_by']:
+    #     aggregate_args = args_dict['order_by'].split('=')
+    #     args_dict['order_by'] = aggregate_args
 
     return args_dict
 
@@ -193,10 +206,9 @@ def parse_args():
 def main():
     args_dict = parse_args()
 
-    if args_dict is str:
+    if type(args_dict) is str:
         return args_dict
 
-    print(args_dict)
     file = args_dict.pop('file')
 
     data_table = get_data_from_csv(file)

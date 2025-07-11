@@ -6,7 +6,7 @@ import sys
 import os
 
 
-def get_data_from_csv(filename):
+def get_data_from_csv(filename: str):
     if not os.path.isfile(filename):
         return "По указанному пути csv документ не найден"
 
@@ -40,7 +40,7 @@ def type_definition(row_fields: list, row_values: list):
     return dict(zip(row_fields, row_types))
 
 
-def where(table: list, field, operator, value):
+def where(table: list, field: str, operator: str, value: str):
     """
         Функция фильтрации с операторами «больше», «меньше» и «равно»
         :param table: наша таблица в виде вложенного списка
@@ -86,7 +86,7 @@ def where(table: list, field, operator, value):
     return selected_rows
 
 
-def aggregate(table: list, field, agg_value):
+def aggregate(table: list, field: str, agg_value: str):
     """
         Функция фильтрации с операторами «больше», «меньше» и «равно»
         :param table: наша таблица в виде вложенного списка

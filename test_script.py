@@ -85,6 +85,8 @@ def run_with_args():
     (['--where', 'brand=apple', '--aggregate', 'rating=min'], "Обязательный аргумент '--file' не указан"),
     (['--file', 'file_path', '--aggregate', 'rating=min'], "Не передан csv документ для обработки"),
     (['--file', 'file_path.csv'], "Не переданы аргументы действия"),
+    (['--file', 'file_path.csv', '--where', 'price>900.5'],
+     {'file': 'file_path.csv', 'where': ('price', '>', '900.5'), 'order_by': None, 'aggregate': None}),
 ])
 def test_pa_invalid_data(run_with_args, input_, response):
     result = run_with_args(input_)
@@ -120,5 +122,3 @@ def test_pa_invalid_data_2(run_with_args, input_, response):
 def test_order_by_invalid_data(field, agg_value, response):
     result = order_by(table, field, agg_value)
     assert result == response
-
-

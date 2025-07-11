@@ -164,7 +164,8 @@ def parse_args():
     for idx, val in enumerate(args[2:], start=2):
         if idx % 2 != 0:
             if val.count("=") != 1:
-                return f"Не корректное значение. {val}"
+                if val.count("<") != 1 and val.count(">") != 1:
+                    return f"Не корректное значение. {val}"
         else:
             if val not in ["--where", "--aggregate"]:
                 return f"Не корректный флаг. {val}"
@@ -172,6 +173,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Обработчик csv файлов")
     parser.add_argument('--file', type=str, required=True, help='Путь к файлу')
     parser.add_argument('--where', type=str, help='Параметры фильтрации')
+    parser.add_argument('--order_by', type=str, help='Параметры сортировки')
     parser.add_argument('--aggregate', type=str, help='Параметры агрегации')
 
     args = parser.parse_args()
@@ -194,6 +196,7 @@ def main():
     if args_dict is str:
         return args_dict
 
+    print(args_dict)
     file = args_dict.pop('file')
 
     data_table = get_data_from_csv(file)
